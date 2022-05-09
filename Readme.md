@@ -15,3 +15,6 @@ Run the following command to set up the minio and nginx
 ```commandline
 docker-compose up --build
 ```
+
+## Test
+Browse to `localhost:9001/login` or `localhost:9000` to starting your amazing projects with minio-nginx
