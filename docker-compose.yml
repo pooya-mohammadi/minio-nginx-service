@@ -1,43 +1,36 @@
 version: "3.7"
 services:
-
-  audio-speech-detection:
-    build: ./audio-speech-detection
-    container_name: audio-speech-detection
-    expose:
-      - 660
-    environment:
-      - ENDPOINT=/audio-speech-detection
-      - MINIO_URL=${MINIO_URL:-minio:9000}
-      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER:-minio123}
-      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD:-minio123}
-    command: gunicorn --workers=2 --threads 1 -b 0.0.0.0:660 entry_point:app --worker-class sync
-
   minio:
     image: minio/minio:latest
+    container_name: minio
     expose:
       - 9000
       - 9001
-    ports:
-      - 9001:9001
-      - 9000:9000
+#    ports:
+#      - 9001:9001
+#      - 9000:9000
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minio12345}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minio12345}
     command: server --console-address ":9001" /data
     volumes:
       - minio_data:/data
+    networks:
+      - minio
 
   nginx:
     build: ./nginx
-    container_name: nginx
-    restart: always
+    container_name: minio-nginx
     ports:
-      - 8000:80
+      - 8003:80
     depends_on:
-      - audio-speech-detection
+      - minio
+    networks:
+      - minio
 
 volumes:
   minio_data:
     name: minio_data
 
+networks:
+  minio:
