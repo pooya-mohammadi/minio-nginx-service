@@ -18,3 +18,6 @@ docker-compose up --build
 
 ## Test
 Browse to `localhost:9001/login` or `localhost:9000` to starting your amazing projects with minio-nginx
+
+## References
+1. https://github.com/minio/minio/tree/master/docs/orchestration/docker-compose
